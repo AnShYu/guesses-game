@@ -17,10 +17,9 @@ public class GameService {
     private final GameRepository gameRepository;
     private final QuestionsRepository questionsRepository;
 
-    public long saveGame(GameDTO gameDTO) {
-        Game game = gameMapper.dtoToGame(gameDTO);
-        Game savedGame = gameRepository.save(game); // при сохранении обычно не получают сразу id. Получают объект, а потом из него уже получают нужные поля (например, ID)
-        return savedGame.getId();
+    public Game saveGame(GameDTO gameDTO) {
+        Game game = gameMapper.gameDtoToGame(gameDTO);
+        return gameRepository.save(game);
     }
 
 

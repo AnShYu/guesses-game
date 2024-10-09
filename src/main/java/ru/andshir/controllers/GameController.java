@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.andshir.controllers.dto.request.AddQuestionDTO;
 import ru.andshir.controllers.dto.request.GameDTO;
+import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.mappers.GameMapper;
+import ru.andshir.model.Game;
 import ru.andshir.service.GameService;
 
 @RestController
@@ -13,10 +16,12 @@ import ru.andshir.service.GameService;
 public class GameController {
 
     private final GameService gameService;
+    private final GameMapper gameMapper;
 
     @PostMapping("/new_game")
-    public long saveGame(@RequestBody GameDTO gameDTO) { // обычно всё-таки возвращают не ID, а объект DTO типа GameResponseDTO
-       return gameService.saveGame(gameDTO);
+    public GameResponseDTO saveGame(@RequestBody GameDTO gameDTO) {
+       Game savedGame = gameService.saveGame(gameDTO);
+       return gameMapper.gameToGameResposeDTO(savedGame);
     }
 
     @PostMapping("/{gameId}/add_question")
