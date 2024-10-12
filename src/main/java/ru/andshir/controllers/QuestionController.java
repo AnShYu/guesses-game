@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.andshir.controllers.dto.response.QuestionResponseDTO;
 import ru.andshir.service.QuestionService;
 
 @RestController
@@ -16,8 +17,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public void saveQuestion(@RequestBody QuestionDTO questionDTO) {
-        questionService.saveQuestion(questionDTO);
+    public QuestionResponseDTO saveQuestion(@RequestBody QuestionDTO questionDTO) {
+        return questionService.saveQuestion(questionDTO);
     }
 
 }

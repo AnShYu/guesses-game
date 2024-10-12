@@ -1,6 +1,7 @@
 package ru.andshir.service;
 
 import ru.andshir.controllers.dto.request.QuestionDTO;
+import ru.andshir.controllers.dto.response.QuestionResponseDTO;
 import ru.andshir.model.Question;
 import lombok.RequiredArgsConstructor;
 import ru.andshir.mappers.QuestionMapper;
@@ -14,9 +15,10 @@ public class QuestionService {
     private final QuestionMapper questionMapper;
     private final QuestionsRepository questionsRepository;
 
-    public void saveQuestion(QuestionDTO questionDTO) {
-        Question question = questionMapper.dtoToQuestion(questionDTO);
-        questionsRepository.save(question);
+    public QuestionResponseDTO saveQuestion(QuestionDTO questionDTO) {
+        Question question = questionMapper.questionDtoToQuestion(questionDTO);
+        Question savedQuestion = questionsRepository.save(question);
+        return questionMapper.questionToQuestionResponseDTO(savedQuestion);
     }
 
 }
