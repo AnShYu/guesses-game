@@ -1,6 +1,6 @@
 package ru.andshir.controllers;
 
-import ru.andshir.controllers.dto.request.QuestionDTO;
+import ru.andshir.controllers.dto.request.AddQuestionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +17,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public QuestionResponseDTO saveQuestion(@RequestBody QuestionDTO questionDTO) {
-        return questionService.saveQuestion(questionDTO);
+    public QuestionResponseDTO saveQuestion(@RequestBody AddQuestionDTO addQuestionDTO) {
+        return questionService.saveQuestion(addQuestionDTO);
     }
 
 }

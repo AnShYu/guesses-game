@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class GameDTO {
+public class AddGameDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime gameDate;

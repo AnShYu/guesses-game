@@ -1,7 +1,7 @@
 package ru.andshir.mappers;
 
 import org.springframework.stereotype.Component;
-import ru.andshir.controllers.dto.request.AddQuestionDTO;
+import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.response.RoundResponseDTO;
 import ru.andshir.model.Round;
 
@@ -16,7 +16,7 @@ public class RoundMapper {
         return roundResponseDTO;
     }
 
-    public Round addQuestionDtoToRound(AddQuestionDTO addQuestionDTO, long gameId) {
+    public Round addQuestionToGameDtoToRound(AddQuestionToGameDTO addQuestionDTO, long gameId) {
         Round round = new Round();
         round.setGameId(gameId);
         round.setRoundNumber(addQuestionDTO.getRoundNumber());

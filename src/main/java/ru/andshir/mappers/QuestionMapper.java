@@ -1,6 +1,6 @@
 package ru.andshir.mappers;
 
-import ru.andshir.controllers.dto.request.QuestionDTO;
+import ru.andshir.controllers.dto.request.AddQuestionDTO;
 import ru.andshir.controllers.dto.response.QuestionResponseDTO;
 import ru.andshir.model.Question;
 import org.springframework.stereotype.Component;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuestionMapper {
 
-    public Question questionDtoToQuestion(QuestionDTO questionDTO) {
+    public Question addQuestionDtoToQuestion(AddQuestionDTO addQuestionDTO) {
         Question question = new Question();
-        question.setQuestionText(questionDTO.getQuestionText());
+        question.setQuestionText(addQuestionDTO.getQuestionText());
         return question;
     }
 

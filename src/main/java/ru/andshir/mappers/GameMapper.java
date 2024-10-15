@@ -2,7 +2,7 @@ package ru.andshir.mappers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.andshir.controllers.dto.request.GameDTO;
+import ru.andshir.controllers.dto.request.AddGameDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.RoundResponseDTO;
 import ru.andshir.model.Game;
@@ -14,9 +14,9 @@ public class GameMapper {
 
     private final RoundMapper roundMapper;
 
-    public Game gameDtoToGame(GameDTO gameDTO) {
+    public Game addGameDtoToGame(AddGameDTO addGameDTO) {
         Game game = new Game();
-        game.setGameDate(gameDTO.getGameDate());
+        game.setGameDate(addGameDTO.getGameDate());
         return game;
     }
 
