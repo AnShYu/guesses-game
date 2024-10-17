@@ -37,4 +37,9 @@ public class GameService {
         return gameMapper.gameToGameResponseDTO(savedGame);
     }
 
+    public GameResponseDTO getGameStatus(long gameId) {
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
+        return gameMapper.gameToGameResponseDTO(game);
+    }
+
 }

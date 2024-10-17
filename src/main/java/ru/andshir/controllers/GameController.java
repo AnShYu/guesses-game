@@ -25,4 +25,9 @@ public class GameController {
         return gameService.addQuestionToGame(gameId, addQuestionDTO);
     }
 
+    @GetMapping("/{gameId}/status")
+    public GameResponseDTO getGameStatus(@PathVariable long gameId) {
+        return gameService.getGameStatus(gameId);
+    }
+
 }
