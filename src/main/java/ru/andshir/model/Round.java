@@ -10,10 +10,10 @@ import lombok.Data;
 public class Round {
 
     @Id
-//    @ManyToOne
-//    @JoinColumn(name = "game_id")
     private long gameId;
     @Id
     private int roundNumber;
-    private long questionId;
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 }

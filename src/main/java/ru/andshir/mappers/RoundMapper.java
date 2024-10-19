@@ -11,7 +11,7 @@ public class RoundMapper {
     public RoundResponseDTO roundToRoundResponseDTO(Round round) {
         RoundResponseDTO roundResponseDTO = new RoundResponseDTO();
         roundResponseDTO.setRoundNumber(round.getRoundNumber());
-        roundResponseDTO.setQuestionId(round.getQuestionId());
+        roundResponseDTO.setQuestionId(round.getQuestion().getId());
         roundResponseDTO.setGameId(round.getGameId());
         return roundResponseDTO;
     }
@@ -20,7 +20,6 @@ public class RoundMapper {
         Round round = new Round();
         round.setGameId(gameId);
         round.setRoundNumber(addQuestionDTO.getRoundNumber());
-        round.setQuestionId(addQuestionDTO.getQuestionId());
         return round;
     }
 
