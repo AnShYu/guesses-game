@@ -16,5 +16,5 @@ public class Game {
     private long id;
     private LocalDateTime gameDate; // LocalDateTime не содержит информацию о TimeZone. Это нужно настраивать дополнительно
     @OneToMany(mappedBy = "gameId")
-    List<Round> questionsInRounds;
+    List<Round> roundsWithQuestions;
 }

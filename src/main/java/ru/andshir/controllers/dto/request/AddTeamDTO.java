@@ -6,5 +6,6 @@ import lombok.Data;
 public class AddTeamDTO {
 
     private String teamName;
+    private long gameId;
 
 }

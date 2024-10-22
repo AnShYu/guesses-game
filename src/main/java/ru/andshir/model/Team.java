@@ -12,4 +12,5 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String teamName;
+    private long gameId;
 }

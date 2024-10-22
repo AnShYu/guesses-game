@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.request.AddGameDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.controllers.dto.response.GameStatusResponseDTO;
 import ru.andshir.service.GameService;
 
 @RestController
@@ -26,7 +27,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/status")
-    public GameResponseDTO getGameStatus(@PathVariable long gameId) {
+    public GameStatusResponseDTO getGameStatus(@PathVariable long gameId) {
         return gameService.getGameStatus(gameId);
     }
 

@@ -11,6 +11,7 @@ public class TeamMapper {
     public Team addTeamDtoToTeam(AddTeamDTO addTeamDTO) {
         Team team = new Team();
         team.setTeamName(addTeamDTO.getTeamName());
+        team.setGameId(addTeamDTO.getGameId());
         return team;
     }
 
@@ -18,6 +19,7 @@ public class TeamMapper {
         TeamResponseDTO teamResponseDTO = new TeamResponseDTO();
         teamResponseDTO.setId(team.getId());
         teamResponseDTO.setTeamName(team.getTeamName());
+        teamResponseDTO.setGameId(team.getGameId());
         return teamResponseDTO;
     }
 

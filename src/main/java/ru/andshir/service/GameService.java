@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.request.AddGameDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.controllers.dto.response.GameStatusResponseDTO;
 import ru.andshir.mappers.GameMapper;
 import ru.andshir.mappers.RoundMapper;
 import ru.andshir.model.Game;
@@ -13,6 +14,9 @@ import ru.andshir.model.Round;
 import ru.andshir.repository.GamesRepository;
 import ru.andshir.repository.QuestionsRepository;
 import ru.andshir.repository.RoundsRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,14 +42,20 @@ public class GameService {
                 .orElseThrow(() -> new IllegalArgumentException("No question with such Id"));
         round.setQuestion(question);
         Round savedRound = roundsRepository.save(round);
-        game.getQuestionsInRounds().add(savedRound);
+        game.getRoundsWithQuestions().add(savedRound);
         Game savedGame = gamesRepository.save(game);
         return gameMapper.gameToGameResponseDTO(savedGame);
     }
 
-    public GameResponseDTO getGameStatus(long gameId) {
+    public GameStatusResponseDTO getGameStatus(long gameId) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
-        return gameMapper.gameToGameResponseDTO(game);
+        List<Round> roundsInGame = game.getRoundsWithQuestions();
+        List<Question> questionsInGame = new ArrayList<>();
+        for (Round round: roundsInGame) {
+            questionsInGame.add(round.getQuestion());
+        }
+        return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame);
+
     }
 
 }
