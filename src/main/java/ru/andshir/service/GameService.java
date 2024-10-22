@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.request.AddGameDTO;
+import ru.andshir.controllers.dto.request.GameReadinessCheckRequestDTO;
+import ru.andshir.controllers.dto.response.GameReadyResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.GameStatusResponseDTO;
 import ru.andshir.mappers.GameMapper;
@@ -27,6 +29,7 @@ public class GameService {
     private final RoundMapper roundMapper;
     private final RoundsRepository roundsRepository;
     private final QuestionsRepository questionsRepository;
+    private final GameReadinessChecker gameReadinessChecker;
 
     public GameResponseDTO saveGame(AddGameDTO addGameDTO) {
         Game game = gameMapper.addGameDtoToGame(addGameDTO);
@@ -55,7 +58,16 @@ public class GameService {
             questionsInGame.add(round.getQuestion());
         }
         return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame);
+    }
 
+    public GameReadyResponseDTO checkGameReadiness(long gameId, GameReadinessCheckRequestDTO gameReadinessCheckRequestDTO) {
+        Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
+        int numberOfQuestions = gameReadinessCheckRequestDTO.getNumberOfQuestions();
+        GameReadyResponseDTO gameReadyResponseDTO = new GameReadyResponseDTO();
+        boolean gameIsReady = gameReadinessChecker.checkGameReadiness(game, numberOfQuestions);
+
+        gameReadyResponseDTO.setGameIsReady(gameIsReady);
+        return gameReadyResponseDTO;
     }
 
 }
