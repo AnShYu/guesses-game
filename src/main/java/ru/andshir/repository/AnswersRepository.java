@@ -2,9 +2,10 @@ package ru.andshir.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.andshir.model.CurrentRound;
+import ru.andshir.model.Answer;
+import ru.andshir.model.AnswerId;
 
 @Repository
-public interface CurrentRoundRepository extends JpaRepository<CurrentRound, Long> {
+public interface AnswersRepository extends JpaRepository<Answer, AnswerId> {
 
 }

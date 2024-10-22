@@ -2,12 +2,9 @@ package ru.andshir.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.andshir.model.Round;
-import ru.andshir.model.RoundId;
+import ru.andshir.model.Team;
 
 @Repository
-public interface RoundsRepository extends JpaRepository<Round, RoundId> {
-
-
+public interface TeamsRepository extends JpaRepository<Team, Long> {
 
 }

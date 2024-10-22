@@ -2,9 +2,9 @@ package ru.andshir.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.andshir.model.Game;
+import ru.andshir.model.CurrentRound;
 
 @Repository
-public interface GameRepository extends JpaRepository<Game, Long> {
+public interface CurrentRoundsRepository extends JpaRepository<CurrentRound, Long> {
 
 }

@@ -2,9 +2,9 @@ package ru.andshir.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.andshir.model.Team;
+import ru.andshir.model.Game;
 
 @Repository
-public interface TeamRepository extends JpaRepository<Team, Long> {
+public interface GamesRepository extends JpaRepository<Game, Long> {
 
 }
