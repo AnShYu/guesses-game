@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.andshir.controllers.dto.request.AnswerDTO;
 import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
 import ru.andshir.service.PlayService;
 
 @RestController
@@ -27,6 +28,11 @@ public class PlayController {
     @PostMapping("/{gameId}/answer")
     public void saveAnswer(@PathVariable long gameId, @RequestBody AnswerDTO answerDTO){
         playService.saveAnswer(gameId, answerDTO);
+    }
+
+    @GetMapping("/{gameId}/round_results")
+    public RoundResultsResponseDTO getRoundResults(@PathVariable long gameId) {
+        return playService.getRoundResults(gameId);
     }
 
 }

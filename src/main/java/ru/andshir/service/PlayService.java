@@ -5,13 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.andshir.controllers.dto.request.AnswerDTO;
 import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
+import ru.andshir.exceptions.RoundResultsNotReadyException;
 import ru.andshir.mappers.AnswerMapper;
 import ru.andshir.mappers.GameMapper;
 import ru.andshir.model.*;
-import ru.andshir.repository.AnswersRepository;
-import ru.andshir.repository.CurrentRoundsRepository;
-import ru.andshir.repository.GamesRepository;
-import ru.andshir.repository.RoundsRepository;
+import ru.andshir.repository.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ public class PlayService {
     private final RoundsRepository roundsRepository;
     private final AnswersRepository answersRepository;
     private final AnswerMapper answerMapper;
+    private final TeamsRepository teamsRepository;
 
     public GameResponseDTO startGame(long gameId) {
         CurrentRound currentRound = new CurrentRound();
@@ -51,6 +51,25 @@ public class PlayService {
         int roundNumber = (currentRound.getCurrentRound());
         Answer answer = answerMapper.DtoToAnswer(answerDTO, gameId, roundNumber);
         answersRepository.save(answer);
+    }
+
+    public RoundResultsResponseDTO getRoundResults(long gameId) {
+        int numberOfTeams = teamsRepository.countByGameId(gameId);
+
+        int currentRoundNumber = currentRoundsRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("No game with such Id"))
+                .getCurrentRound();
+        int numberOfAnswers = answersRepository.countByGameIdAndRoundNumber(gameId, currentRoundNumber);
+
+        if (numberOfAnswers != numberOfTeams) {
+            throw new RoundResultsNotReadyException("Waiting for all teams to answer");
+        } else {
+
+        }
+
+
+
+        return new RoundResultsResponseDTO();
     }
 
 }

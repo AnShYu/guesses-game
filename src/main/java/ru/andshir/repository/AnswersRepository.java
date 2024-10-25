@@ -8,4 +8,6 @@ import ru.andshir.model.AnswerId;
 @Repository
 public interface AnswersRepository extends JpaRepository<Answer, AnswerId> {
 
+    int countByGameIdAndRoundNumber(long gameId, int roundNumber);
+
 }
