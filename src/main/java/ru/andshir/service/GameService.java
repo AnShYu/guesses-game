@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.request.AddGameDTO;
 import ru.andshir.controllers.dto.request.GameReadinessCheckRequestDTO;
-import ru.andshir.controllers.dto.response.GameReadyResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.GameStatusResponseDTO;
+import ru.andshir.exceptions.GameNotReadyException;
 import ru.andshir.mappers.GameMapper;
 import ru.andshir.mappers.RoundMapper;
 import ru.andshir.model.Game;
@@ -60,14 +60,13 @@ public class GameService {
         return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame);
     }
 
-    public GameReadyResponseDTO checkGameReadiness(long gameId, GameReadinessCheckRequestDTO gameReadinessCheckRequestDTO) {
+    public void checkGameReadiness(long gameId, GameReadinessCheckRequestDTO gameReadinessCheckRequestDTO) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
-        int numberOfQuestions = gameReadinessCheckRequestDTO.getNumberOfQuestions();
-        GameReadyResponseDTO gameReadyResponseDTO = new GameReadyResponseDTO();
-        boolean gameIsReady = gameReadinessChecker.checkGameReadiness(game, numberOfQuestions);
+        int numberOfRounds = gameReadinessCheckRequestDTO.getNumberOfRounds();
 
-        gameReadyResponseDTO.setGameIsReady(gameIsReady);
-        return gameReadyResponseDTO;
+        if (!gameReadinessChecker.checkGameReadiness(game, numberOfRounds)) {
+            throw new GameNotReadyException("Game is not ready");
+        }
     }
 
 }

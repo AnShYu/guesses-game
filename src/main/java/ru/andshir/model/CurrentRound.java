@@ -12,6 +12,6 @@ public class CurrentRound {
 
     @Id
     private long gameId;
-    private int currentRound;
+    private int currentRoundNumber;
 
 }

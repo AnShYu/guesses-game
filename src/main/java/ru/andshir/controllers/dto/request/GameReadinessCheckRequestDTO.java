@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class GameReadinessCheckRequestDTO {
 
-    private int numberOfQuestions;
+    private int numberOfRounds;
 
 }

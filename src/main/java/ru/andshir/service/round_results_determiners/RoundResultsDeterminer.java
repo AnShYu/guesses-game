@@ -1,4 +1,4 @@
-package ru.andshir.service;
+package ru.andshir.service.round_results_determiners;
 
 import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
 
