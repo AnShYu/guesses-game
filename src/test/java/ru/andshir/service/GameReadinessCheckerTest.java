@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameReadinessCheckerTest {
 
+
     @Test
     void checkGameReadiness() {
-
-
-
     }
 }

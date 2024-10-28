@@ -28,9 +28,7 @@ public class GameReadinessChecker {
 
     private boolean checkSequentialRoundNumbers(Game game) {
         boolean sequentialRoundNumbers = true;
-
         int counter = 1;
-
         List<Round> gameRounds = game.getRoundsWithQuestions();
 
         for (Round round: gameRounds) {
@@ -42,12 +40,10 @@ public class GameReadinessChecker {
         }
 
         return sequentialRoundNumbers;
-
     }
 
     private boolean checkNoNullQuestions(Game game) {
         boolean noNullQuestions = true;
-
         List<Round> gameRounds = game.getRoundsWithQuestions();
 
         for (Round round: gameRounds) {
@@ -61,7 +57,6 @@ public class GameReadinessChecker {
 
     private boolean checkNoDuplicateQuestions(Game game) {
         boolean noDuplicates = true;
-
         List<Round> gameRounds = game.getRoundsWithQuestions();
         Set<Long> questionIdsInGame = new HashSet<>();
 

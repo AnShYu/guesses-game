@@ -8,11 +8,15 @@ import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
 import ru.andshir.exceptions.RoundResultsNotReadyException;
+import ru.andshir.exceptions.TeamHasAlreadyAnsweredException;
+import ru.andshir.exceptions.TeamNotAdmittedException;
 import ru.andshir.mappers.AnswerMapper;
 import ru.andshir.mappers.GameMapper;
 import ru.andshir.model.*;
 import ru.andshir.repository.*;
 import ru.andshir.service.round_results_determiners.RoundResultsDeterminer;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +55,21 @@ public class PlayService {
     }
 
     public void saveAnswer(long gameId, AnswerDTO answerDTO) {
+        long teamId = answerDTO.getTeamId();
+        //TODO
+        if (!teamIsAdmittedToGame(gameId, teamId)) {
+            throw new TeamNotAdmittedException("The answering team is not admitted to the game");
+        }
+
         CurrentRound currentRound = getCurrentRound(gameId);
-        int roundNumber = (currentRound.getCurrentRoundNumber());
-        Answer answer = answerMapper.DtoToAnswer(answerDTO, gameId, roundNumber);
+        int currentRoundNumber = currentRound.getCurrentRoundNumber();
+
+        if (!teamDidNotAnswerYet(gameId, currentRoundNumber, teamId)) {
+            throw new TeamHasAlreadyAnsweredException("Team has already answered in this round");
+        }
+
+
+        Answer answer = answerMapper.DtoToAnswer(answerDTO, gameId, currentRoundNumber);
         answersRepository.save(answer);
     }
 
@@ -66,10 +82,7 @@ public class PlayService {
         if (numberOfAnswers != numberOfTeams) {
             throw new RoundResultsNotReadyException("Waiting for all teams to answer");
         } else {
-
-
-
-
+            // TODO нунжо сделать тесты
             return roundResultsDeterminer.determineRoundResults(gameId, currentRoundNumber);
         }
     }
@@ -78,6 +91,16 @@ public class PlayService {
     private CurrentRound getCurrentRound(long gameId) {
         return currentRoundsRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("No game with such Id"));
+    }
+
+    private boolean teamIsAdmittedToGame(long gameId, long teamId) {
+        //TODO
+        return true;
+    }
+
+    private boolean teamDidNotAnswerYet(long gameId, int currentRoundNumber, long teamId) {
+        //TODO
+        return true;
     }
 
 }
