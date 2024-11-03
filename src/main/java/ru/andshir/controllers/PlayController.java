@@ -3,7 +3,6 @@ package ru.andshir.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.andshir.controllers.dto.request.AnswerDTO;
-import ru.andshir.controllers.dto.request.GameReadinessCheckRequestDTO;
 import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
@@ -19,10 +18,8 @@ public class PlayController {
     private final GameService gameService;
 
     @PostMapping("/{gameId}/start_game")
-    public GameResponseDTO startGame(@PathVariable long gameId, @RequestBody GameReadinessCheckRequestDTO gameReadinessCheckRequestDTO) {
-        //todo нормально, что просто вызывается и если не выбрасывает исключение, то идем дальше.
-        // Т.е. основным поведением становится не возвращать какое-то значение, а выборосить или не выбросить исключение
-        gameService.checkGameReadiness(gameId, gameReadinessCheckRequestDTO);
+    public GameResponseDTO startGame(@PathVariable long gameId) {
+        gameService.checkGameReadiness(gameId);
         return playService.startGame(gameId);
     }
 

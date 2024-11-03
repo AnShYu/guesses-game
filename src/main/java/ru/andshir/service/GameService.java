@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.request.AddGameDTO;
-import ru.andshir.controllers.dto.request.GameReadinessCheckRequestDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.GameStatusResponseDTO;
 import ru.andshir.exceptions.GameNotReadyException;
@@ -16,6 +15,8 @@ import ru.andshir.model.Round;
 import ru.andshir.repository.GamesRepository;
 import ru.andshir.repository.QuestionsRepository;
 import ru.andshir.repository.RoundsRepository;
+import ru.andshir.service.game.readiness.checker.CheckersAggregator;
+import ru.andshir.service.game.readiness.checker.GameReadinessChecker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class GameService {
     private final RoundsRepository roundsRepository;
     private final QuestionsRepository questionsRepository;
     private final GameReadinessChecker gameReadinessChecker;
+    private final CheckersAggregator checkersAggregator;
 
     public GameResponseDTO saveGame(AddGameDTO addGameDTO) {
         Game game = gameMapper.addGameDtoToGame(addGameDTO);
@@ -60,11 +62,10 @@ public class GameService {
         return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame);
     }
 
-    public void checkGameReadiness(long gameId, GameReadinessCheckRequestDTO gameReadinessCheckRequestDTO) {
+    public void checkGameReadiness(long gameId) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
-        int numberOfRounds = gameReadinessCheckRequestDTO.getNumberOfRounds();
 
-        if (!gameReadinessChecker.checkGameReadiness(game, numberOfRounds)) {
+        if (!gameReadinessChecker.checkGameReadiness(game)) {
             throw new GameNotReadyException("Game is not ready");
         }
     }

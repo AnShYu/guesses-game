@@ -3,6 +3,7 @@ package ru.andshir.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.andshir.controllers.dto.request.AnswerDTO;
 import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
@@ -12,11 +13,16 @@ import ru.andshir.exceptions.TeamHasAlreadyAnsweredException;
 import ru.andshir.exceptions.TeamNotAdmittedException;
 import ru.andshir.mappers.AnswerMapper;
 import ru.andshir.mappers.GameMapper;
+import ru.andshir.mappers.RoundResultsMapper;
 import ru.andshir.model.*;
 import ru.andshir.repository.*;
-import ru.andshir.service.round_results_determiners.RoundResultsDeterminer;
+import ru.andshir.service.round.results.determiners.RRDhowManySameAnswers;
+import ru.andshir.service.round.results.determiners.RoundResultsDeterminer;
+import ru.andshir.service.round.results.determiners.RoundResultsWrapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +35,10 @@ public class PlayService {
     private final AnswersRepository answersRepository;
     private final AnswerMapper answerMapper;
     private final TeamsRepository teamsRepository;
-    //TODO is it ok?
-    @Qualifier("RRDhowManySameAnswers")
-    private final RoundResultsDeterminer roundResultsDeterminer;
+    private final RRDhowManySameAnswers RRDhowManySameAnswers;
+    private final RoundResultsMapper roundResultsMapper;
 
+    @Transactional
     public GameResponseDTO startGame(long gameId) {
         CurrentRound currentRound = new CurrentRound();
         currentRound.setGameId(gameId);
@@ -42,7 +48,8 @@ public class PlayService {
                 .orElseThrow(() -> new IllegalArgumentException("There is no game with such Id to start"));
         return gameMapper.gameToGameResponseDTO(startedGame);
     }
-    
+
+    @Transactional
     public CurrentQuestionResponseDTO getCurrentQuestion(long gameId) {
         CurrentRound currentRound = getCurrentRound(gameId);
         int currentRoundNumber = currentRound.getCurrentRoundNumber();
@@ -64,12 +71,13 @@ public class PlayService {
         CurrentRound currentRound = getCurrentRound(gameId);
         int currentRoundNumber = currentRound.getCurrentRoundNumber();
 
+        //TODO Не нужно двойных отрецаний
         if (!teamDidNotAnswerYet(gameId, currentRoundNumber, teamId)) {
             throw new TeamHasAlreadyAnsweredException("Team has already answered in this round");
         }
 
 
-        Answer answer = answerMapper.DtoToAnswer(answerDTO, gameId, currentRoundNumber);
+        Answer answer = answerMapper.dtoToAnswer(answerDTO, gameId, currentRoundNumber);
         answersRepository.save(answer);
     }
 
@@ -82,8 +90,15 @@ public class PlayService {
         if (numberOfAnswers != numberOfTeams) {
             throw new RoundResultsNotReadyException("Waiting for all teams to answer");
         } else {
-            // TODO нунжо сделать тесты
-            return roundResultsDeterminer.determineRoundResults(gameId, currentRoundNumber);
+            RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
+                    .determineRoundResults(gameId, currentRoundNumber);
+            Map<String, Long> teamTeamId = new HashMap<>();
+            List<Team> teams = teamsRepository.findAll();
+            for (Team team: teams) {
+                teamTeamId.put(team.getTeamName(), team.getId());
+            }
+            return roundResultsMapper
+                    .wrapperToDTO(roundResultsWrapper, teamTeamId);
         }
     }
 

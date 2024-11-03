@@ -2,13 +2,15 @@ package ru.andshir.controllers.dto.response;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class RoundResultsResponseDTO {
 
-    private String mostPopularAnswer;
-    //TODO как хэшмап получать из базы и как она передается в json
-    private HashMap<String, Integer> teamPoints = new HashMap<>();
+    private List<String> mostPopularAnswers = new ArrayList<>();
+    private Map<String, Integer> teamPoints = new HashMap<>();
 
 }
