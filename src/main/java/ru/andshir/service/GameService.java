@@ -15,7 +15,6 @@ import ru.andshir.model.Round;
 import ru.andshir.repository.GamesRepository;
 import ru.andshir.repository.QuestionsRepository;
 import ru.andshir.repository.RoundsRepository;
-import ru.andshir.service.game.readiness.checker.CheckersAggregator;
 import ru.andshir.service.game.readiness.checker.GameReadinessChecker;
 
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public class GameService {
     private final RoundsRepository roundsRepository;
     private final QuestionsRepository questionsRepository;
     private final GameReadinessChecker gameReadinessChecker;
-    private final CheckersAggregator checkersAggregator;
 
     public GameResponseDTO saveGame(AddGameDTO addGameDTO) {
         Game game = gameMapper.addGameDtoToGame(addGameDTO);
