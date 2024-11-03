@@ -1,7 +1,6 @@
 package ru.andshir.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.andshir.controllers.dto.request.AnswerDTO;
@@ -17,7 +16,6 @@ import ru.andshir.mappers.RoundResultsMapper;
 import ru.andshir.model.*;
 import ru.andshir.repository.*;
 import ru.andshir.service.round.results.determiners.RRDhowManySameAnswers;
-import ru.andshir.service.round.results.determiners.RoundResultsDeterminer;
 import ru.andshir.service.round.results.determiners.RoundResultsWrapper;
 
 import java.util.HashMap;
@@ -61,26 +59,22 @@ public class PlayService {
         return currentQuestionResponseDTO;
     }
 
+    @Transactional
     public void saveAnswer(long gameId, AnswerDTO answerDTO) {
         long teamId = answerDTO.getTeamId();
-        //TODO
         if (!teamIsAdmittedToGame(gameId, teamId)) {
             throw new TeamNotAdmittedException("The answering team is not admitted to the game");
         }
-
-        CurrentRound currentRound = getCurrentRound(gameId);
-        int currentRoundNumber = currentRound.getCurrentRoundNumber();
-
-        //TODO Не нужно двойных отрецаний
-        if (!teamDidNotAnswerYet(gameId, currentRoundNumber, teamId)) {
+        int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
+        if (teamAlreadyAnswered(gameId, currentRoundNumber, teamId)) {
             throw new TeamHasAlreadyAnsweredException("Team has already answered in this round");
         }
-
 
         Answer answer = answerMapper.dtoToAnswer(answerDTO, gameId, currentRoundNumber);
         answersRepository.save(answer);
     }
 
+    @Transactional
     public RoundResultsResponseDTO getRoundResults(long gameId) {
         int numberOfTeams = teamsRepository.countByGameId(gameId);
 
@@ -93,7 +87,7 @@ public class PlayService {
             RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
                     .determineRoundResults(gameId, currentRoundNumber);
             Map<String, Long> teamTeamId = new HashMap<>();
-            List<Team> teams = teamsRepository.findAll();
+            List<Team> teams = teamsRepository.findTeamByGameId(gameId);
             for (Team team: teams) {
                 teamTeamId.put(team.getTeamName(), team.getId());
             }
@@ -109,13 +103,16 @@ public class PlayService {
     }
 
     private boolean teamIsAdmittedToGame(long gameId, long teamId) {
-        //TODO
-        return true;
+        Team team = teamsRepository.findById(teamId).orElseThrow(() -> new IllegalArgumentException("No team with such Id"));
+        return team.getGameId() == gameId;
     }
 
-    private boolean teamDidNotAnswerYet(long gameId, int currentRoundNumber, long teamId) {
-        //TODO
-        return true;
+    private boolean teamAlreadyAnswered(long gameId, int currentRoundNumber, long teamId) {
+        AnswerId answerId = new AnswerId();
+        answerId.setTeamId(teamId);
+        answerId.setGameId(gameId);
+        answerId.setRoundNumber(currentRoundNumber);
+        return answersRepository.existsById(answerId);
     }
 
 }

@@ -2,6 +2,7 @@ package ru.andshir.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
 import ru.andshir.controllers.dto.request.AddGameDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
@@ -31,13 +32,14 @@ public class GameService {
     private final QuestionsRepository questionsRepository;
     private final GameReadinessChecker gameReadinessChecker;
 
+    @Transactional
     public GameResponseDTO saveGame(AddGameDTO addGameDTO) {
         Game game = gameMapper.addGameDtoToGame(addGameDTO);
         Game savedGame = gamesRepository.save(game);
         return gameMapper.gameToGameResponseDTO(savedGame);
     }
 
-
+    @Transactional
     public GameResponseDTO addQuestionToGame(long gameId, AddQuestionToGameDTO addQuestionDTO) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
         Round round = roundMapper.addQuestionToGameDtoToRound(addQuestionDTO, gameId);
@@ -50,6 +52,7 @@ public class GameService {
         return gameMapper.gameToGameResponseDTO(savedGame);
     }
 
+    @Transactional
     public GameStatusResponseDTO getGameStatus(long gameId) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
         List<Round> roundsInGame = game.getRoundsWithQuestions();
@@ -60,6 +63,7 @@ public class GameService {
         return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame);
     }
 
+    @Transactional
     public void checkGameReadiness(long gameId) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
 

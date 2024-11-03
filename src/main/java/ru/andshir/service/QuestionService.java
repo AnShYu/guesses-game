@@ -1,5 +1,6 @@
 package ru.andshir.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.andshir.controllers.dto.request.AddQuestionDTO;
 import ru.andshir.controllers.dto.response.QuestionResponseDTO;
 import ru.andshir.model.Question;
@@ -15,6 +16,7 @@ public class QuestionService {
     private final QuestionMapper questionMapper;
     private final QuestionsRepository questionsRepository;
 
+    @Transactional
     public QuestionResponseDTO saveQuestion(AddQuestionDTO addQuestionDTO) {
         Question question = questionMapper.addQuestionDtoToQuestion(addQuestionDTO);
         Question savedQuestion = questionsRepository.save(question);

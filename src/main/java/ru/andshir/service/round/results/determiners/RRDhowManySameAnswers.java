@@ -16,6 +16,7 @@ public class RRDhowManySameAnswers implements RoundResultsDeterminer {
     private final AnswersRepository answersRepository;
     private final TeamsRepository teamsRepository;
 
+    //TODO Нужно ли делать его transactional?
     @Override
     public RoundResultsWrapper determineRoundResults(long gameId, int currentRoundNumber) {
         List<Answer> answers = answersRepository.findByGameIdAndRoundNumber(gameId, currentRoundNumber);
