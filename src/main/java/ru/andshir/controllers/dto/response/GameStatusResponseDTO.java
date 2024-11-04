@@ -13,5 +13,6 @@ public class GameStatusResponseDTO {
     private long id;
     private LocalDateTime gameDate;
     List<Question> questions = new ArrayList<>();
+    int numberOfRounds;
 
 }

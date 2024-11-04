@@ -82,7 +82,8 @@ public class PlayService {
         int numberOfAnswers = answersRepository.countByGameIdAndRoundNumber(gameId, currentRoundNumber);
 
         if (numberOfAnswers != numberOfTeams) {
-            throw new RoundResultsNotReadyException("Waiting for all teams to answer");
+            int numberOfMissingAnswers = numberOfTeams - numberOfAnswers;
+            throw new RoundResultsNotReadyException("Waiting for all teams to answer", numberOfMissingAnswers);
         } else {
             RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
                     .determineRoundResults(gameId, currentRoundNumber);

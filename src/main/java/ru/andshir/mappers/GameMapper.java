@@ -42,6 +42,7 @@ public class GameMapper {
         for (Question question: questions) {
             gameStatusResponseDTO.getQuestions().add(question);
         }
+        gameStatusResponseDTO.setNumberOfRounds(game.getNumberOfRounds());
         return gameStatusResponseDTO;
     }
 }
