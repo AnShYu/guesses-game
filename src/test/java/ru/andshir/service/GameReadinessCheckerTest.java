@@ -15,7 +15,7 @@ class GameReadinessCheckerTest {
 
 
     @Test
-    void numberOfPlannedRoundsEqualsActualNumberTest() {
+    void twoDuplicatingQuestionsTest() {
 
 
 
