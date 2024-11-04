@@ -10,39 +10,33 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NoDuplicateQuestionsCheckerTest {
+class NullQuestionsCheckerTest {
 
     @Test
-    void twoDuplicatingQuestionsOnlyTest() {
-        Game game = makeGame(1, 1);
-        GameChecker gameChecker = new NoDuplicateQuestionsChecker();
+    void oneNullQuestionTest() {
+        Game game = makeGame(true);
+        GameChecker gameChecker = new NullQuestionsChecker();
         assertFalse(gameChecker.check(game));
     }
 
     @Test
-    void noDuplicatingQuestionsTest() {
-        Game game = makeGame(1, 2, 3);
-        GameChecker gameChecker = new NoDuplicateQuestionsChecker();
+    void noNullQuestionTest() {
+        Game game = makeGame(false);
+        GameChecker gameChecker = new NullQuestionsChecker();
         assertTrue(gameChecker.check(game));
     }
 
-    @Test
-    void twoDuplicatingQuestionsAndOneOriginalTest() {
-        Game game = makeGame(1, 2, 1);
-        GameChecker gameChecker = new NoDuplicateQuestionsChecker();
-        assertFalse(gameChecker.check(game));
-    }
 
 
 
 
 
-
-    private Game makeGame(long... questionId) {
+    private Game makeGame(boolean withNullQuestion) {
         List<Round> gameRounds = new ArrayList<>();
-        for (int i = 0; i < questionId.length; i++) {
-            gameRounds.add(makeRound(questionId[i]));
+        for (int i = 0; i < 3; i++) {
+            gameRounds.add(makeRound(i));
         }
+        if (withNullQuestion) gameRounds.add(makeRoundWithNullQuestion());
 
         Game game = new Game();
         game.setRoundsWithQuestions(gameRounds);
@@ -58,5 +52,9 @@ class NoDuplicateQuestionsCheckerTest {
         return round;
     }
 
+    private Round makeRoundWithNullQuestion() {
+        Round round = new Round();
+        round.setQuestion(null);
+        return round;
+    }
 }
-
