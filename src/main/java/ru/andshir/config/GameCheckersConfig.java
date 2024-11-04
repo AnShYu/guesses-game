@@ -12,16 +12,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GameCheckersConfig {
 
-    private final NoDuplicateQuestionsChecker noDuplicateQuestionsChecker;
+
     private final NullQuestionsChecker nullQuestionsChecker;
+    private final NoDuplicateQuestionsChecker noDuplicateQuestionsChecker;
     private final NumberOfRoundsChecker numberOfRoundsChecker;
     private final SequentialRoundNumbersChecker sequentialRoundNumbersChecker;
 
     @Bean
     public List<GameChecker> gameCheckers() {
         List<GameChecker> checkers = new ArrayList<>();
-        checkers.add(noDuplicateQuestionsChecker);
         checkers.add(nullQuestionsChecker);
+        checkers.add(noDuplicateQuestionsChecker);
         checkers.add(numberOfRoundsChecker);
         checkers.add(sequentialRoundNumbersChecker);
         return checkers;

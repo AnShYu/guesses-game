@@ -3,7 +3,6 @@ package ru.andshir.service.round.results.determiners;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.andshir.model.Answer;
-import ru.andshir.model.Team;
 import ru.andshir.repository.AnswersRepository;
 import ru.andshir.repository.TeamsRepository;
 
@@ -14,7 +13,6 @@ import java.util.*;
 public class RRDhowManySameAnswers implements RoundResultsDeterminer {
 
     private final AnswersRepository answersRepository;
-    private final TeamsRepository teamsRepository;
 
     //TODO Нужно ли делать его transactional?
     @Override
