@@ -21,10 +21,10 @@ class RRDhowManySameAnswersTest {
     @Test
     void allGaveDifferentAnswersTest() {
         long[] teamIds = {1,2,3};
-        String[] answerTexts = {"Ответ 1", "Ответ 2", "Ответ 3"};
+        String[] answerTexts = {"Answer 1", "Answer 2", "Answer 3"};
         RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
 
-        String[] mostPopularAnswerTexts = {"Ответ 1", "Ответ 2", "Ответ 3"};
+        String[] mostPopularAnswerTexts = {"Answer 1", "Answer 2", "Answer 3"};
         int[] points = {0,0,0};
         RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
 
@@ -34,10 +34,10 @@ class RRDhowManySameAnswersTest {
     @Test
     void oneMostPopularAnswerTest() {
         long[] teamIds = {1,2,3};
-        String[] answerTexts = {"Ответ 1", "Ответ 1", "Ответ 3"};
+        String[] answerTexts = {"Answer 1", "Answer 1", "Answer 3"};
         RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
 
-        String[] mostPopularAnswerTexts = {"Ответ 1"};
+        String[] mostPopularAnswerTexts = {"Answer 1"};
         int[] points = {1,1,0};
         RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
 
@@ -47,10 +47,10 @@ class RRDhowManySameAnswersTest {
     @Test
     void twoMostPopularAnswersTest() {
         long[] teamIds = {1,2,3,4,5};
-        String[] answerTexts = {"Ответ 1", "Ответ 1", "Ответ 2", "Ответ 2", "Ответ 3"};
+        String[] answerTexts = {"Answer 1", "Answer 1", "Answer 2", "Answer 2", "Ответ 3"};
         RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
 
-        String[] mostPopularAnswerTexts = {"Ответ 1", "Ответ 2"};
+        String[] mostPopularAnswerTexts = {"Answer 1", "Answer 2"};
         int[] points = {1,1,1,1,0};
         RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
 
