@@ -37,5 +37,4 @@ public class PlayController {
     public RoundResultsResponseDTO getRoundResults(@PathVariable long gameId) {
         return playService.getRoundResults(gameId);
     }
-
 }

@@ -35,6 +35,7 @@ public class PlayService {
     private final TeamsRepository teamsRepository;
     private final RRDhowManySameAnswers RRDhowManySameAnswers;
     private final RoundResultsMapper roundResultsMapper;
+    private final RoundResultsRepository roundResultsRepository;
 
     @Transactional
     public GameResponseDTO startGame(long gameId) {
@@ -87,11 +88,25 @@ public class PlayService {
         } else {
             RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
                     .determineRoundResults(gameId, currentRoundNumber);
+            //TODO можно сразу получать только team и teamId из базы? И нормально ли получать команды
+            // по gameId (с увеличением количества игр поиск будет дольше)?
             Map<String, Long> teamTeamId = new HashMap<>();
             List<Team> teams = teamsRepository.findTeamByGameId(gameId);
             for (Team team: teams) {
                 teamTeamId.put(team.getTeamName(), team.getId());
             }
+
+
+            //TODO множественные обращения к базе
+            for (Long teamId: roundResultsWrapper.getTeamIdPoints().keySet()) {
+                RoundResultId roundResultId = new RoundResultId(gameId, currentRoundNumber, teamId);
+                int points = roundResultsWrapper.getTeamIdPoints().get(teamId);
+                RoundResult roundResult = new RoundResult();
+                roundResult.setRoundResultId(roundResultId);
+                roundResult.setPoints(points);
+                roundResultsRepository.save(roundResult);
+            }
+
             return roundResultsMapper
                     .wrapperToDTO(roundResultsWrapper, teamTeamId);
         }
