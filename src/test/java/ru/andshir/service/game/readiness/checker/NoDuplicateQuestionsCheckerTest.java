@@ -33,6 +33,12 @@ class NoDuplicateQuestionsCheckerTest {
         assertFalse(gameChecker.check(game));
     }
 
+    @Test
+    void oneQuestionTest() {
+        Game game = makeGame(1);
+        GameChecker gameChecker = new NoDuplicateQuestionsChecker();
+        assertTrue(gameChecker.check(game));
+    }
 
 
 

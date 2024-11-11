@@ -4,25 +4,39 @@ import org.springframework.stereotype.Component;
 import ru.andshir.model.Game;
 import ru.andshir.model.Round;
 
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class SequentialRoundNumbersChecker implements GameChecker {
 
     @Override
     public boolean check(Game game) {
-        boolean sequentialRoundNumbers = true;
-        int counter = 1;
-        List<Round> gameRounds = game.getRoundsWithQuestions();
+        Set<Integer> allActualRoundNumbers = getAllActualRoundNumbers(game);
+        int intendedNumberOfRounds = game.getNumberOfRounds();
 
-        for (Round round: gameRounds) {
-            if (round.getRoundNumber() == counter) {
-                counter++;
-            } else {
-                return false;
+        if (intendedNumberOfRounds != allActualRoundNumbers.size()) {
+            return false;
+        } else {
+            for (int i = 1; i<=intendedNumberOfRounds; i++) {
+                if (!allActualRoundNumbers.contains(i)) {
+                    return false;
+                }
             }
         }
+        return true;
+    }
 
-        return sequentialRoundNumbers;
+    private Set<Integer> getAllActualRoundNumbers(Game game) {
+        List<Round> gameRounds = game.getRoundsWithQuestions();
+        Set<Integer> allActualRoundNumbers = new HashSet<>();
+
+        for (Round round: gameRounds) {
+            allActualRoundNumbers.add(round.getRoundNumber());
+        }
+
+        return allActualRoundNumbers;
     }
 }

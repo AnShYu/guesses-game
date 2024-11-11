@@ -28,7 +28,7 @@ class RRDhowManySameAnswersTest {
         int[] points = {0,0,0};
         RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(1L, 1));
+        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
     }
 
     @Test
@@ -41,7 +41,7 @@ class RRDhowManySameAnswersTest {
         int[] points = {1,1,0};
         RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(1L, 1));
+        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
     }
 
     @Test
@@ -54,7 +54,20 @@ class RRDhowManySameAnswersTest {
         int[] points = {1,1,1,1,0};
         RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(1L, 1));
+        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
+    }
+
+    @Test
+    void allSameAnswersTest() {
+        long[] teamIds = {1,2,3};
+        String[] answerTexts = {"Answer 1", "Answer 1", "Answer 1"};
+        RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
+
+        String[] mostPopularAnswerTexts = {"Answer 1"};
+        int[] points = {2,2,2};
+        RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
+
+        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
     }
 
     private RRDhowManySameAnswers makeRRDhowManySameAnswers(long[] teamIds, String[] answerTexts) {

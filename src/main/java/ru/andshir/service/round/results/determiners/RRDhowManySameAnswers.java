@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.andshir.model.Answer;
 import ru.andshir.repository.AnswersRepository;
-import ru.andshir.repository.TeamsRepository;
 
 import java.util.*;
 

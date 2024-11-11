@@ -90,10 +90,10 @@ public class PlayService {
                     .determineRoundResults(gameId, currentRoundNumber);
             //TODO можно сразу получать только team и teamId из базы? И нормально ли получать команды
             // по gameId (с увеличением количества игр поиск будет дольше)?
-            Map<String, Long> teamTeamId = new HashMap<>();
+            Map<String, Long> teamIdByTeamName = new HashMap<>();
             List<Team> teams = teamsRepository.findTeamByGameId(gameId);
             for (Team team: teams) {
-                teamTeamId.put(team.getTeamName(), team.getId());
+                teamIdByTeamName.put(team.getTeamName(), team.getId());
             }
 
 
@@ -108,7 +108,7 @@ public class PlayService {
             }
 
             return roundResultsMapper
-                    .wrapperToDTO(roundResultsWrapper, teamTeamId);
+                    .wrapperToDTO(roundResultsWrapper, teamIdByTeamName);
         }
     }
 

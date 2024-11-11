@@ -13,6 +13,7 @@ import ru.andshir.exceptions.RoundResultsNotReadyException;
 @RequiredArgsConstructor
 public class ExceptionsHandler {
 
+    //TODO поменять код ошибки
     @ExceptionHandler
     public ResponseEntity<String> handleIllegalArgument(final IllegalArgumentException ex) {
         return new ResponseEntity<>("что-то пошло не так; " + ex.getMessage(), HttpStatus.NOT_FOUND);

@@ -27,7 +27,7 @@ class SequentialRoundNumbersCheckerTest {
 
     @Test
     void sequenceStartsWithZeroTest() {
-        Game game = makeGame(1,5,3);
+        Game game = makeGame(0,1,2);
         GameChecker gameChecker = new SequentialRoundNumbersChecker();
         assertFalse(gameChecker.check(game));
     }
@@ -39,6 +39,12 @@ class SequentialRoundNumbersCheckerTest {
         assertTrue(gameChecker.check(game));
     }
 
+    @Test
+    void backSequenceTest() {
+        Game game = makeGame(3,2,1);
+        GameChecker gameChecker = new SequentialRoundNumbersChecker();
+        assertTrue(gameChecker.check(game));
+    }
 
 
 
@@ -46,12 +52,13 @@ class SequentialRoundNumbersCheckerTest {
 
     private Game makeGame(int... roundNumber) {
         List<Round> gameRounds = new ArrayList<>();
-        for (int i = 0; i < roundNumber.length; i++) {
-            gameRounds.add(makeRound(roundNumber[i]));
+        for (int i : roundNumber) {
+            gameRounds.add(makeRound(i));
         }
 
         Game game = new Game();
         game.setRoundsWithQuestions(gameRounds);
+        game.setNumberOfRounds(roundNumber.length);
 
         return game;
     }
