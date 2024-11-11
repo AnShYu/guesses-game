@@ -11,6 +11,6 @@ import java.util.Map;
 public class RoundResultsWrapper {
 
     List<String> mostPopularAnswers = new ArrayList<>();
-    Map<Long, Integer> teamIdPoints = new HashMap<>();
+    Map<Long, Integer> pointsByTeamId = new HashMap<>();
 
 }

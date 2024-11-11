@@ -94,9 +94,9 @@ public class PlayService {
                 teamNameByTeamId.put(team.getId(), team.getTeamName());
             }
 
-            for (Long teamId: roundResultsWrapper.getTeamIdPoints().keySet()) {
+            for (Long teamId: roundResultsWrapper.getPointsByTeamId().keySet()) {
                 RoundResultId roundResultId = new RoundResultId(gameId, currentRoundNumber, teamId);
-                int points = roundResultsWrapper.getTeamIdPoints().get(teamId);
+                int points = roundResultsWrapper.getPointsByTeamId().get(teamId);
                 RoundResult roundResult = new RoundResult();
                 roundResult.setRoundResultId(roundResultId);
                 roundResult.setPoints(points);

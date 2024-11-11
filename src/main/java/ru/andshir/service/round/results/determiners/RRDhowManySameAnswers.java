@@ -24,7 +24,7 @@ public class RRDhowManySameAnswers implements RoundResultsDeterminer {
 
         RoundResultsWrapper roundResultsWrapper = new RoundResultsWrapper();
         roundResultsWrapper.setMostPopularAnswers(mostPopularAnswers);
-        roundResultsWrapper.setTeamIdPoints(teamIdPoints);
+        roundResultsWrapper.setPointsByTeamId(teamIdPoints);
 
         return roundResultsWrapper;
     }

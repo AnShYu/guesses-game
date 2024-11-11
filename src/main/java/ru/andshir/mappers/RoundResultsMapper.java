@@ -12,7 +12,7 @@ import java.util.Map;
 public class RoundResultsMapper {
 
     public RoundResultsResponseDTO wrapperToDTO(RoundResultsWrapper roundResultsWrapper, Map<Long, String> teamNameByTeamId) {
-        Map<Long, Integer> pointsByTeamId = roundResultsWrapper.getTeamIdPoints();
+        Map<Long, Integer> pointsByTeamId = roundResultsWrapper.getPointsByTeamId();
         List<String> mostPopularAnswers = roundResultsWrapper.getMostPopularAnswers();
 
         Map<String, Integer> teamPoints = new HashMap<>();

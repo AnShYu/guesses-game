@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.andshir.model.Answer;
 import ru.andshir.repository.AnswersRepository;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,52 +21,78 @@ class RRDhowManySameAnswersTest {
     void allGaveDifferentAnswersTest() {
         long[] teamIds = {1,2,3};
         String[] answerTexts = {"Answer 1", "Answer 2", "Answer 3"};
-        RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
+        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
-        String[] mostPopularAnswerTexts = {"Answer 1", "Answer 2", "Answer 3"};
-        int[] points = {0,0,0};
-        RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
+        Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{0,0,0});
+        String[] expectedMostPopularAnswerTexts = {"Answer 1", "Answer 2", "Answer 3"};
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
+        assertTrue(checkIfMostPopularAnswersListIsCorrect(expectedMostPopularAnswerTexts, roundResultsWrapper));
+        assertTrue(checkIfTeamPointsMapIsCorrect(expectedPointsByTeamIds, roundResultsWrapper));
     }
 
     @Test
     void oneMostPopularAnswerTest() {
         long[] teamIds = {1,2,3};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 3"};
-        RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
+        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
-        String[] mostPopularAnswerTexts = {"Answer 1"};
-        int[] points = {1,1,0};
-        RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
+        Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{1,1,0});
+        String[] expectedMostPopularAnswerTexts = {"Answer 1"};
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
+        assertTrue(checkIfMostPopularAnswersListIsCorrect(expectedMostPopularAnswerTexts, roundResultsWrapper));
+        assertTrue(checkIfTeamPointsMapIsCorrect(expectedPointsByTeamIds, roundResultsWrapper));
     }
 
     @Test
-    void twoMostPopularAnswersTest() {
+    void twoMostPopularAnswerTest() {
         long[] teamIds = {1,2,3,4,5};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 2", "Answer 2", "Ответ 3"};
-        RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
+        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
-        String[] mostPopularAnswerTexts = {"Answer 1", "Answer 2"};
-        int[] points = {1,1,1,1,0};
-        RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
+        Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{1,1,1,1,0});
+        String[] expectedMostPopularAnswerTexts = {"Answer 1", "Answer 2"};
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
+        assertTrue(checkIfMostPopularAnswersListIsCorrect(expectedMostPopularAnswerTexts, roundResultsWrapper));
+        assertTrue(checkIfTeamPointsMapIsCorrect(expectedPointsByTeamIds, roundResultsWrapper));
     }
 
     @Test
     void allSameAnswersTest() {
         long[] teamIds = {1,2,3};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 1"};
-        RRDhowManySameAnswers rRDhowManySameAnswers = makeRRDhowManySameAnswers(teamIds, answerTexts);
+        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
-        String[] mostPopularAnswerTexts = {"Answer 1"};
-        int[] points = {2,2,2};
-        RoundResultsWrapper roundResultsWrapper = makeRoundResultsWrapper(mostPopularAnswerTexts, teamIds, points);
+        Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{2,2,2});
+        String[] expectedMostPopularAnswerTexts = {"Answer 1"};
 
-        assertEquals(roundResultsWrapper, rRDhowManySameAnswers.determineRoundResults(GAME_ID, ROUND_NUMBER));
+        assertTrue(checkIfMostPopularAnswersListIsCorrect(expectedMostPopularAnswerTexts, roundResultsWrapper));
+        assertTrue(checkIfTeamPointsMapIsCorrect(expectedPointsByTeamIds, roundResultsWrapper));
+    }
+
+    @Test
+    void oneTeamOneAnswerTest() {
+        long[] teamIds = {1};
+        String[] answerTexts = {"Answer 1"};
+        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+
+        Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{0});
+        String[] expectedMostPopularAnswerTexts = {"Answer 1"};
+
+        assertTrue(checkIfMostPopularAnswersListIsCorrect(expectedMostPopularAnswerTexts, roundResultsWrapper));
+        assertTrue(checkIfTeamPointsMapIsCorrect(expectedPointsByTeamIds, roundResultsWrapper));
+    }
+
+
+
+
+
+
+    private Map<Long, Integer> makePointsByTeamId(long[] teamIds, int[] points) {
+        Map<Long, Integer> pointsByTeamId = new HashMap<>();
+        for (int i = 0; i< teamIds.length; i++) {
+            pointsByTeamId.put(teamIds[i], points[i]);
+        }
+        return pointsByTeamId;
     }
 
     private RRDhowManySameAnswers makeRRDhowManySameAnswers(long[] teamIds, String[] answerTexts) {
@@ -77,13 +102,35 @@ class RRDhowManySameAnswersTest {
         return new RRDhowManySameAnswers(mockAnswersRepository);
     }
 
-    private RoundResultsWrapper makeRoundResultsWrapper(String[] mostPopularAnswerTexts, long[] teamIds, int[] points) {
-        List<String> mostPopularAnswers = makeListOfMostPopularAnswers(mostPopularAnswerTexts);
-        Map<Long, Integer> teamIdPoints = makeTeamIdPointsMap(teamIds, points);
-        RoundResultsWrapper roundResultsWrapper = new RoundResultsWrapper();
-        roundResultsWrapper.setMostPopularAnswers(mostPopularAnswers);
-        roundResultsWrapper.setTeamIdPoints(teamIdPoints);
-        return roundResultsWrapper;
+    private boolean checkIfMostPopularAnswersListIsCorrect(String[] expectedMostPopularAnswerTexts, RoundResultsWrapper roundResultsWrapper) {
+        List<String> actualMostPopularAnswers = roundResultsWrapper.getMostPopularAnswers();
+
+        if (expectedMostPopularAnswerTexts.length != actualMostPopularAnswers.size()) {
+            return false;
+        } else {
+            for (int i = 0; i<expectedMostPopularAnswerTexts.length; i++) {
+                if (!actualMostPopularAnswers.contains(expectedMostPopularAnswerTexts[i])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkIfTeamPointsMapIsCorrect(Map<Long, Integer> expectedPointsByTeamId, RoundResultsWrapper roundResultsWrapper) {
+        Map<Long, Integer> actualPointsByTeamId = roundResultsWrapper.getPointsByTeamId();
+        if (expectedPointsByTeamId.size() != actualPointsByTeamId.size()) {
+            return false;
+        } else {
+            for (Long teamId: expectedPointsByTeamId.keySet()) {
+                if (!actualPointsByTeamId.containsKey(teamId)) {
+                    return false;
+                } else if (!expectedPointsByTeamId.get(teamId).equals(actualPointsByTeamId.get(teamId))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private List<Answer> makeListOfAnswers(long[] teamIds, String[] answerTexts) {
@@ -92,25 +139,6 @@ class RRDhowManySameAnswersTest {
             answers.add(makeAnswer(teamIds[i], answerTexts[i]));
         }
         return answers;
-    }
-
-    private List<String> makeListOfMostPopularAnswers(String[] answerTexts) {
-        //TODO в тестируемом методе список самых популярных ответов собирается из мапы, в которой не гарантирован порядок
-        Map<String, Integer> technicalMap = new HashMap<>();
-        for (String answerText : answerTexts) {
-            technicalMap.put(answerText, 0);
-        }
-        List<String> mostPopularAnswers = new ArrayList<>();
-        mostPopularAnswers.addAll(technicalMap.keySet());
-        return mostPopularAnswers;
-    }
-
-    private Map<Long, Integer> makeTeamIdPointsMap(long[] teamIds, int[] points) {
-        Map<Long, Integer> teamIdPoints = new HashMap<>();
-        for (int i = 0; i < teamIds.length; i++) {
-            teamIdPoints.put(teamIds[i], points[i]);
-        }
-        return teamIdPoints;
     }
 
     private Answer makeAnswer(long teamId, String answerText) {
