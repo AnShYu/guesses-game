@@ -11,14 +11,14 @@ import java.util.Map;
 @Component
 public class RoundResultsMapper {
 
-    public RoundResultsResponseDTO wrapperToDTO(RoundResultsWrapper roundResultsWrapper, Map<String, Long> teamIdByTeamName) {
-        Map<Long, Integer> teamIdPoints = roundResultsWrapper.getTeamIdPoints();
+    public RoundResultsResponseDTO wrapperToDTO(RoundResultsWrapper roundResultsWrapper, Map<Long, String> teamNameByTeamId) {
+        Map<Long, Integer> pointsByTeamId = roundResultsWrapper.getTeamIdPoints();
         List<String> mostPopularAnswers = roundResultsWrapper.getMostPopularAnswers();
 
         Map<String, Integer> teamPoints = new HashMap<>();
-        for (String teamName: teamIdByTeamName.keySet()) {
-            int points = teamIdPoints.get(teamIdByTeamName.get(teamName));
-            teamPoints.put(teamName, points);
+        for (Long teamId: teamNameByTeamId.keySet()) {
+            int points = pointsByTeamId.get(teamId);
+            teamPoints.put(teamNameByTeamId.get(teamId), points);
         }
 
         RoundResultsResponseDTO roundResultsResponseDTO = new RoundResultsResponseDTO();
