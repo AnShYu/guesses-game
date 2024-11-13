@@ -9,7 +9,7 @@ import java.util.*;
 
 @Component
 @RequiredArgsConstructor
-public class RRDhowManySameAnswers implements RoundResultsDeterminer {
+public class HowManySameAnswersDeterminer implements RoundResultsDeterminer {
 
     private final AnswersRepository answersRepository;
 

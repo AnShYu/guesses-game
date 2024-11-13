@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RRDhowManySameAnswersTest {
+class HowManySameAnswersDeterminerTest {
 
     private final static long GAME_ID = 1;
     private final static int ROUND_NUMBER = 1;
@@ -21,7 +21,7 @@ class RRDhowManySameAnswersTest {
     void allGaveDifferentAnswersTest() {
         long[] teamIds = {1,2,3};
         String[] answerTexts = {"Answer 1", "Answer 2", "Answer 3"};
-        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
         Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{0,0,0});
         String[] expectedMostPopularAnswerTexts = {"Answer 1", "Answer 2", "Answer 3"};
@@ -34,7 +34,7 @@ class RRDhowManySameAnswersTest {
     void oneMostPopularAnswerTest() {
         long[] teamIds = {1,2,3};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 3"};
-        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
         Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{1,1,0});
         String[] expectedMostPopularAnswerTexts = {"Answer 1"};
@@ -47,7 +47,7 @@ class RRDhowManySameAnswersTest {
     void twoMostPopularAnswerTest() {
         long[] teamIds = {1,2,3,4,5};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 2", "Answer 2", "Ответ 3"};
-        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
         Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{1,1,1,1,0});
         String[] expectedMostPopularAnswerTexts = {"Answer 1", "Answer 2"};
@@ -60,7 +60,7 @@ class RRDhowManySameAnswersTest {
     void allSameAnswersTest() {
         long[] teamIds = {1,2,3};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 1"};
-        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
         Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{2,2,2});
         String[] expectedMostPopularAnswerTexts = {"Answer 1"};
@@ -73,7 +73,7 @@ class RRDhowManySameAnswersTest {
     void differentPopularityAnswersTest() {
         long[] teamIds = {1,2,3,4,5,6,7};
         String[] answerTexts = {"Answer 1", "Answer 1", "Answer 1", "Answer 2", "Answer 2", "Answer 3", "Answer 4"};
-        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
         Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{2,2,2,1,1,0,0});
         String[] expectedMostPopularAnswerTexts = {"Answer 1"};
@@ -86,7 +86,7 @@ class RRDhowManySameAnswersTest {
     void oneTeamOneAnswerTest() {
         long[] teamIds = {1};
         String[] answerTexts = {"Answer 1"};
-        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
 
         Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{0});
         String[] expectedMostPopularAnswerTexts = {"Answer 1"};
@@ -108,11 +108,11 @@ class RRDhowManySameAnswersTest {
         return pointsByTeamId;
     }
 
-    private RRDhowManySameAnswers makeRRDhowManySameAnswers(long[] teamIds, String[] answerTexts) {
+    private HowManySameAnswersDeterminer howManySameAnswersDeterminer(long[] teamIds, String[] answerTexts) {
         List<Answer> answers = makeListOfAnswers(teamIds, answerTexts);
         AnswersRepository mockAnswersRepository = Mockito.mock(AnswersRepository.class);
         Mockito.when(mockAnswersRepository.findByGameIdAndRoundNumber(Mockito.anyLong(), Mockito.anyInt())).thenReturn(answers);
-        return new RRDhowManySameAnswers(mockAnswersRepository);
+        return new HowManySameAnswersDeterminer(mockAnswersRepository);
     }
 
     private boolean checkIfMostPopularAnswersListIsCorrect(String[] expectedMostPopularAnswerTexts, RoundResultsWrapper roundResultsWrapper) {

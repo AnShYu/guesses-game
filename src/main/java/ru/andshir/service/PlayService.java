@@ -15,7 +15,7 @@ import ru.andshir.mappers.GameMapper;
 import ru.andshir.mappers.RoundResultsMapper;
 import ru.andshir.model.*;
 import ru.andshir.repository.*;
-import ru.andshir.service.round.results.determiners.RRDhowManySameAnswers;
+import ru.andshir.service.round.results.determiners.HowManySameAnswersDeterminer;
 import ru.andshir.service.round.results.determiners.RoundResultsWrapper;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class PlayService {
     private final AnswersRepository answersRepository;
     private final AnswerMapper answerMapper;
     private final TeamsRepository teamsRepository;
-    private final RRDhowManySameAnswers RRDhowManySameAnswers;
+    private final HowManySameAnswersDeterminer howManySameAnswersDeterminer;
     private final RoundResultsMapper roundResultsMapper;
     private final RoundResultsRepository roundResultsRepository;
 
@@ -79,7 +79,7 @@ public class PlayService {
     public RoundResultsResponseDTO endRound(long gameId) {
         roundResultsAreReady(gameId);
         int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
-        RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer
                 .determineRoundResults(gameId, currentRoundNumber);
         Map<Long, String> teamNameByTeamId = new HashMap<>();
         List<Team> teams = teamsRepository.findTeamByGameId(gameId);
@@ -104,7 +104,7 @@ public class PlayService {
     public RoundResultsResponseDTO getRoundResults(long gameId) {
         roundResultsAreReady(gameId);
         int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
-        RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
+        RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer
                 .determineRoundResults(gameId, currentRoundNumber);
         //TODO teamNameByTeamId лучше в отдельный метод, т.к. повтор кода
         Map<Long, String> teamNameByTeamId = new HashMap<>();
