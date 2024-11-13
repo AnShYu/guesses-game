@@ -2,8 +2,11 @@ package ru.andshir.mappers;
 
 import org.springframework.stereotype.Component;
 import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
+import ru.andshir.model.RoundResult;
+import ru.andshir.repository.RoundResultsRepository;
 import ru.andshir.service.round.results.determiners.RoundResultsWrapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,5 +30,20 @@ public class RoundResultsMapper {
 
         return roundResultsResponseDTO;
     }
+
+//    public RoundResultsResponseDTO listOfRoundResultsToDTO(List<RoundResult> roundResults) {
+//
+//
+//TODO мы нигде не сохраняем самые популярные ответы
+//
+//
+//
+//
+//
+//        List<String> mostPopularAnswers = new ArrayList<>();
+//        Map<String, Integer> teamPoints = new HashMap<>();
+//    }
+
+
 
 }

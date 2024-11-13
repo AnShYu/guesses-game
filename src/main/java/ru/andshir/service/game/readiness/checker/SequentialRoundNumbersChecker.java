@@ -8,6 +8,8 @@ import ru.andshir.model.Round;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class SequentialRoundNumbersChecker implements GameChecker {
@@ -30,13 +32,8 @@ public class SequentialRoundNumbersChecker implements GameChecker {
     }
 
     private Set<Integer> getAllActualRoundNumbers(Game game) {
-        List<Round> gameRounds = game.getRoundsWithQuestions();
-        Set<Integer> allActualRoundNumbers = new HashSet<>();
-
-        for (Round round: gameRounds) {
-            allActualRoundNumbers.add(round.getRoundNumber());
-        }
-
-        return allActualRoundNumbers;
+        return game.getRoundsWithQuestions().stream()
+                .map(Round::getRoundNumber)
+                .collect(Collectors.toSet());
     }
 }

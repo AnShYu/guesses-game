@@ -70,6 +70,19 @@ class RRDhowManySameAnswersTest {
     }
 
     @Test
+    void differentPopularityAnswersTest() {
+        long[] teamIds = {1,2,3,4,5,6,7};
+        String[] answerTexts = {"Answer 1", "Answer 1", "Answer 1", "Answer 2", "Answer 2", "Answer 3", "Answer 4"};
+        RoundResultsWrapper roundResultsWrapper = makeRRDhowManySameAnswers(teamIds, answerTexts).determineRoundResults(GAME_ID, ROUND_NUMBER);
+
+        Map<Long, Integer> expectedPointsByTeamIds = makePointsByTeamId(teamIds, new int[]{2,2,2,1,1,0,0});
+        String[] expectedMostPopularAnswerTexts = {"Answer 1"};
+
+        assertTrue(checkIfMostPopularAnswersListIsCorrect(expectedMostPopularAnswerTexts, roundResultsWrapper));
+        assertTrue(checkIfTeamPointsMapIsCorrect(expectedPointsByTeamIds, roundResultsWrapper));
+    }
+
+    @Test
     void oneTeamOneAnswerTest() {
         long[] teamIds = {1};
         String[] answerTexts = {"Answer 1"};

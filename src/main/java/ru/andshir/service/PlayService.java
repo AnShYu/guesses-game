@@ -76,37 +76,49 @@ public class PlayService {
     }
 
     @Transactional
-    public RoundResultsResponseDTO getRoundResults(long gameId) {
-        int numberOfTeams = teamsRepository.countByGameId(gameId);
-
+    public RoundResultsResponseDTO endRound(long gameId) {
+        roundResultsAreReady(gameId);
         int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
-        int numberOfAnswers = answersRepository.countByGameIdAndRoundNumber(gameId, currentRoundNumber);
-
-        if (numberOfAnswers != numberOfTeams) {
-            int numberOfMissingAnswers = numberOfTeams - numberOfAnswers;
-            throw new RoundResultsNotReadyException("Waiting for all teams to answer", numberOfMissingAnswers);
-        } else {
-            RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
-                    .determineRoundResults(gameId, currentRoundNumber);
-            Map<Long, String> teamNameByTeamId = new HashMap<>();
-            List<Team> teams = teamsRepository.findTeamByGameId(gameId);
-            for (Team team: teams) {
-                teamNameByTeamId.put(team.getId(), team.getTeamName());
-            }
-
-            for (Long teamId: roundResultsWrapper.getPointsByTeamId().keySet()) {
-                RoundResultId roundResultId = new RoundResultId(gameId, currentRoundNumber, teamId);
-                int points = roundResultsWrapper.getPointsByTeamId().get(teamId);
-                RoundResult roundResult = new RoundResult();
-                roundResult.setRoundResultId(roundResultId);
-                roundResult.setPoints(points);
-                roundResultsRepository.save(roundResult);
-            }
-
-            return roundResultsMapper
-                    .wrapperToDTO(roundResultsWrapper, teamNameByTeamId);
+        RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
+                .determineRoundResults(gameId, currentRoundNumber);
+        Map<Long, String> teamNameByTeamId = new HashMap<>();
+        List<Team> teams = teamsRepository.findTeamByGameId(gameId);
+        for (Team team: teams) {
+            teamNameByTeamId.put(team.getId(), team.getTeamName());
         }
+
+        for (Long teamId: roundResultsWrapper.getPointsByTeamId().keySet()) {
+            RoundResultId roundResultId = new RoundResultId(gameId, currentRoundNumber, teamId);
+            int points = roundResultsWrapper.getPointsByTeamId().get(teamId);
+            RoundResult roundResult = new RoundResult();
+            roundResult.setRoundResultId(roundResultId);
+            roundResult.setPoints(points);
+            roundResultsRepository.save(roundResult);
+        }
+
+        return roundResultsMapper
+                .wrapperToDTO(roundResultsWrapper, teamNameByTeamId);
     }
+
+    @Transactional
+    public RoundResultsResponseDTO getRoundResults(long gameId) {
+        roundResultsAreReady(gameId);
+        int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
+        RoundResultsWrapper roundResultsWrapper = RRDhowManySameAnswers
+                .determineRoundResults(gameId, currentRoundNumber);
+        //TODO teamNameByTeamId лучше в отдельный метод, т.к. повтор кода
+        Map<Long, String> teamNameByTeamId = new HashMap<>();
+        List<Team> teams = teamsRepository.findTeamByGameId(gameId);
+        for (Team team: teams) {
+            teamNameByTeamId.put(team.getId(), team.getTeamName());
+        }
+        return roundResultsMapper
+                .wrapperToDTO(roundResultsWrapper, teamNameByTeamId);
+    }
+
+
+
+
 
 
     private CurrentRound getCurrentRound(long gameId) {
@@ -125,6 +137,18 @@ public class PlayService {
         answerId.setGameId(gameId);
         answerId.setRoundNumber(currentRoundNumber);
         return answersRepository.existsById(answerId);
+    }
+
+    private void roundResultsAreReady(long gameId) {
+        int numberOfTeams = teamsRepository.countByGameId(gameId);
+
+        int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
+        int numberOfAnswers = answersRepository.countByGameIdAndRoundNumber(gameId, currentRoundNumber);
+
+        if (numberOfAnswers != numberOfTeams) {
+            int numberOfMissingAnswers = numberOfTeams - numberOfAnswers;
+            throw new RoundResultsNotReadyException("Waiting for all teams to answer", numberOfMissingAnswers);
+        }
     }
 
 }

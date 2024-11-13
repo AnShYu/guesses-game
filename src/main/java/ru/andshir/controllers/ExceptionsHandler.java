@@ -13,10 +13,10 @@ import ru.andshir.exceptions.RoundResultsNotReadyException;
 @RequiredArgsConstructor
 public class ExceptionsHandler {
 
-    //TODO поменять код ошибки
+    //TODO поменять код ошибки. Почему этот не подходит?
     @ExceptionHandler
     public ResponseEntity<String> handleIllegalArgument(final IllegalArgumentException ex) {
-        return new ResponseEntity<>("что-то пошло не так; " + ex.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler

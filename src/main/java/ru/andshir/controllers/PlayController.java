@@ -33,8 +33,13 @@ public class PlayController {
         playService.saveAnswer(gameId, answerDTO);
     }
 
-    @GetMapping("/{gameId}/round_results")
-    public RoundResultsResponseDTO getRoundResults(@PathVariable long gameId) {
-        return playService.getRoundResults(gameId);
+    @PostMapping("/{gameId}/end_round")
+    public RoundResultsResponseDTO endRound(@PathVariable long gameId) {
+        return playService.endRound(gameId);
     }
+
+//    @GetMapping("/{gameId}/round_results")
+//    public RoundResultsResponseDTO getRoundResults(@PathVariable long gameId) {
+//        return playService.getRoundResults(gameId);
+//    }
 }

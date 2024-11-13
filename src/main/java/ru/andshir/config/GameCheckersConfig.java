@@ -1,8 +1,10 @@
 package ru.andshir.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import ru.andshir.service.game.readiness.checker.*;
 
 import java.util.ArrayList;
@@ -27,4 +29,6 @@ public class GameCheckersConfig {
         checkers.add(sequentialRoundNumbersChecker);
         return checkers;
     }
+
+
 }

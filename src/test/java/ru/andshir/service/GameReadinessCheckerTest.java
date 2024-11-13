@@ -25,42 +25,6 @@ class GameReadinessCheckerTest {
         assertTrue(gameReadinessChecker.checkGameReadiness(game));
     }
 
-//    @Test
-//    void nullQuestionTest() {
-//        long[] questionIds = {1,2,3};
-//        int[] roundNumbers = {1,2,3};
-//        Game game = makeGame(true, questionIds, roundNumbers, 4);
-//        GameReadinessChecker gameReadinessChecker = makeGameReadinessChecker();
-//        assertFalse(gameReadinessChecker.checkGameReadiness(game));
-//    }
-//
-//    @Test
-//    void duplicateQuestionTest() {
-//        long[] questionIds = {1,1,3};
-//        int[] roundNumbers = {1,2,3};
-//        Game game = makeGame(false, questionIds, roundNumbers, 3);
-//        GameReadinessChecker gameReadinessChecker = makeGameReadinessChecker();
-//        assertFalse(gameReadinessChecker.checkGameReadiness(game));
-//    }
-//
-//    @Test
-//    void numberOfRoundsTest() {
-//        long[] questionIds = {1,2,3};
-//        int[] roundNumbers = {1,2,3};
-//        Game game = makeGame(false, questionIds, roundNumbers, 2);
-//        GameReadinessChecker gameReadinessChecker = makeGameReadinessChecker();
-//        assertFalse(gameReadinessChecker.checkGameReadiness(game));
-//    }
-//
-//    @Test
-//    void sequentialRoundsTest() {
-//        long[] questionIds = {1,1,3};
-//        int[] roundNumbers = {1,2,3};
-//        Game game = makeGame(false, questionIds, roundNumbers, 3);
-//        GameReadinessChecker gameReadinessChecker = makeGameReadinessChecker();
-//        assertFalse(gameReadinessChecker.checkGameReadiness(game));
-//    }
-
 
 
 
