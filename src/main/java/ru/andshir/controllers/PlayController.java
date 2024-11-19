@@ -38,8 +38,13 @@ public class PlayController {
         return playService.endRound(gameId);
     }
 
-//    @GetMapping("/{gameId}/round_results")
-//    public RoundResultsResponseDTO getRoundResults(@PathVariable long gameId) {
-//        return playService.getRoundResults(gameId);
-//    }
+    @GetMapping("/{gameId}/round_results")
+    public RoundResultsResponseDTO getRoundResults(@PathVariable long gameId) {
+        return playService.getRoundResults(gameId);
+    }
+
+    @PostMapping("/{gameId}/next_round")
+    public void startNextRound(@PathVariable long gameId) {
+        playService.startNextRound(gameId);
+    }
 }

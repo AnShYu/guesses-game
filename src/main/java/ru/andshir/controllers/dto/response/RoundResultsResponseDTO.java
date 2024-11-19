@@ -12,5 +12,6 @@ public class RoundResultsResponseDTO {
 
     private List<String> mostPopularAnswers = new ArrayList<>();
     private Map<String, Integer> teamPoints = new HashMap<>();
+    private boolean isFinalRound;
 
 }

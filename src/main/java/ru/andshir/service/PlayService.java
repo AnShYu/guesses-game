@@ -81,11 +81,7 @@ public class PlayService {
         int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
         RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer
                 .determineRoundResults(gameId, currentRoundNumber);
-        Map<Long, String> teamNameByTeamId = new HashMap<>();
-        List<Team> teams = teamsRepository.findTeamByGameId(gameId);
-        for (Team team: teams) {
-            teamNameByTeamId.put(team.getId(), team.getTeamName());
-        }
+        Map<Long, String> teamNameByTeamId = makeTeamNameByTeamIdMap(gameId);
 
         for (Long teamId: roundResultsWrapper.getPointsByTeamId().keySet()) {
             RoundResultId roundResultId = new RoundResultId(gameId, currentRoundNumber, teamId);
@@ -96,8 +92,11 @@ public class PlayService {
             roundResultsRepository.save(roundResult);
         }
 
-        return roundResultsMapper
+        RoundResultsResponseDTO roundResultsResponseDTO = roundResultsMapper
                 .wrapperToDTO(roundResultsWrapper, teamNameByTeamId);
+
+        roundResultsResponseDTO.setFinalRound(checkIfRoundWasFinal(gameId, currentRoundNumber));
+        return roundResultsResponseDTO;
     }
 
     @Transactional
@@ -106,14 +105,16 @@ public class PlayService {
         int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
         RoundResultsWrapper roundResultsWrapper = howManySameAnswersDeterminer
                 .determineRoundResults(gameId, currentRoundNumber);
-        //TODO teamNameByTeamId лучше в отдельный метод, т.к. повтор кода
-        Map<Long, String> teamNameByTeamId = new HashMap<>();
-        List<Team> teams = teamsRepository.findTeamByGameId(gameId);
-        for (Team team: teams) {
-            teamNameByTeamId.put(team.getId(), team.getTeamName());
-        }
+        Map<Long, String> teamNameByTeamId = makeTeamNameByTeamIdMap(gameId);
         return roundResultsMapper
                 .wrapperToDTO(roundResultsWrapper, teamNameByTeamId);
+    }
+
+    @Transactional
+    public void startNextRound(long gameId) {
+        int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
+//TODO
+
     }
 
 
@@ -150,5 +151,24 @@ public class PlayService {
             throw new RoundResultsNotReadyException("Waiting for all teams to answer", numberOfMissingAnswers);
         }
     }
+
+    private Map<Long, String> makeTeamNameByTeamIdMap(long gameId) {
+        Map<Long, String> teamNameByTeamId = new HashMap<>();
+        List<Team> teams = teamsRepository.findTeamByGameId(gameId);
+        for (Team team: teams) {
+            teamNameByTeamId.put(team.getId(), team.getTeamName());
+        }
+        return teamNameByTeamId;
+    }
+
+    private boolean checkIfRoundWasFinal(long gameId, int currentRoundNumber) {
+        Game game = gamesRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("There is no game with such Id"));
+        int totalNumberOfRoundsInGame = game.getNumberOfRounds();
+        return currentRoundNumber == totalNumberOfRoundsInGame;
+    }
+
+
+
 
 }
