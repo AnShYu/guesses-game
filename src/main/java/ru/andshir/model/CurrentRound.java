@@ -13,5 +13,5 @@ public class CurrentRound {
     @Id
     private long gameId;
     private int currentRoundNumber;
-
+    private boolean resultsSaved;
 }

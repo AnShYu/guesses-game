@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.andshir.controllers.dto.request.AnswerDTO;
 import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.controllers.dto.response.GameResultsResponseDTO;
 import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
 import ru.andshir.service.GameService;
 import ru.andshir.service.PlayService;
@@ -47,4 +48,10 @@ public class PlayController {
     public void startNextRound(@PathVariable long gameId) {
         playService.startNextRound(gameId);
     }
+
+    @GetMapping("/{gameId}/game_results")
+    public GameResultsResponseDTO getGameResults(@PathVariable long gameId) {
+        return playService.getGameResults(gameId);
+    }
+
 }

@@ -66,7 +66,6 @@ public class GameService {
     @Transactional
     public void checkGameReadiness(long gameId) {
         Game game = gamesRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("No game with such ID"));
-
         if (!gameReadinessChecker.checkGameReadiness(game)) {
             throw new GameNotReadyException("Game is not ready");
         }

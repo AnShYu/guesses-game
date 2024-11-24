@@ -6,15 +6,17 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.andshir.controllers.dto.request.AnswerDTO;
 import ru.andshir.controllers.dto.response.CurrentQuestionResponseDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
+import ru.andshir.controllers.dto.response.GameResultsResponseDTO;
 import ru.andshir.controllers.dto.response.RoundResultsResponseDTO;
-import ru.andshir.exceptions.RoundResultsNotReadyException;
-import ru.andshir.exceptions.TeamHasAlreadyAnsweredException;
-import ru.andshir.exceptions.TeamNotAdmittedException;
+import ru.andshir.exceptions.*;
 import ru.andshir.mappers.AnswerMapper;
 import ru.andshir.mappers.GameMapper;
+import ru.andshir.mappers.GameResultsMapper;
 import ru.andshir.mappers.RoundResultsMapper;
 import ru.andshir.model.*;
 import ru.andshir.repository.*;
+import ru.andshir.service.game.readiness.checker.GameReadinessChecker;
+import ru.andshir.service.game.results.calculator.GameResultsCalculator;
 import ru.andshir.service.round.results.determiners.HowManySameAnswersDeterminer;
 import ru.andshir.service.round.results.determiners.RoundResultsWrapper;
 
@@ -36,12 +38,16 @@ public class PlayService {
     private final HowManySameAnswersDeterminer howManySameAnswersDeterminer;
     private final RoundResultsMapper roundResultsMapper;
     private final RoundResultsRepository roundResultsRepository;
+    //Todo правильно?
+    private final GameResultsCalculator resultsCalculator;
+    private final GameResultsMapper gameResultsMapper;
 
     @Transactional
     public GameResponseDTO startGame(long gameId) {
         CurrentRound currentRound = new CurrentRound();
         currentRound.setGameId(gameId);
         currentRound.setCurrentRoundNumber(1);
+        currentRound.setResultsSaved(false);
         currentRoundsRepository.save(currentRound);
         Game startedGame = gamesRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("There is no game with such Id to start"));
@@ -91,6 +97,8 @@ public class PlayService {
             roundResult.setPoints(points);
             roundResultsRepository.save(roundResult);
         }
+        //todo можно ли как-то по-другому менять?
+        currentRoundsRepository.updateResultsSaved(gameId, true);
 
         RoundResultsResponseDTO roundResultsResponseDTO = roundResultsMapper
                 .wrapperToDTO(roundResultsWrapper, teamNameByTeamId);
@@ -112,9 +120,30 @@ public class PlayService {
 
     @Transactional
     public void startNextRound(long gameId) {
-        int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
-//TODO
+        CurrentRound currentRound = getCurrentRound(gameId);
+        int currentRoundNumber = currentRound.getCurrentRoundNumber();
+        if (checkIfRoundWasFinal(gameId, currentRoundNumber)) {
+            throw new NoMoreRoundsException("Final round is over. No more rounds");
+        }
+        currentRoundsRepository.updateRoundNumber(gameId, currentRoundNumber + 1);
+        currentRoundsRepository.updateResultsSaved(gameId, false);
+    }
 
+    @Transactional
+    public GameResultsResponseDTO getGameResults(long gameId) {
+        int currentRoundNumber = getCurrentRound(gameId).getCurrentRoundNumber();
+        if (!checkIfRoundWasFinal(gameId, currentRoundNumber)) {
+            throw new NotFinalRoundException("It was not the final round");
+        } else if (!checkIfRoundResultsAreSaved(gameId)) {
+            throw new FinalRoundResultsNotSavedException("Final round results have not been saved yet");
+        }
+        List<RoundResult> allGameRoundResults = roundResultsRepository.findAllByGameId(gameId);
+
+        Map<Long, Integer> totalTeamPointsByTeamId = resultsCalculator.calculateGameResults(allGameRoundResults);
+        Map<Long, String> teamNameByTeamId = makeTeamNameByTeamIdMap(gameId);
+        GameResultsResponseDTO gameResultsResponseDTO = gameResultsMapper.teamNameAndTeamIdAndPointsToGameResultsResponseDTO(totalTeamPointsByTeamId, teamNameByTeamId);
+        return gameResultsResponseDTO;
+        //Todo сохранять результаты игры, обнулять currentRound
     }
 
 
@@ -166,6 +195,11 @@ public class PlayService {
                 .orElseThrow(() -> new IllegalArgumentException("There is no game with such Id"));
         int totalNumberOfRoundsInGame = game.getNumberOfRounds();
         return currentRoundNumber == totalNumberOfRoundsInGame;
+    }
+
+    private boolean checkIfRoundResultsAreSaved(long gameId) {
+        CurrentRound currentRound = getCurrentRound(gameId);
+        return currentRound.isResultsSaved();
     }
 
 
