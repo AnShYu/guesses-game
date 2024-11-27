@@ -54,4 +54,9 @@ public class PlayController {
         return playService.getGameResults(gameId);
     }
 
+//    @PostMapping("/{gameId}/end_game")
+//    public GameResultsResponseDTO getGameResults(@PathVariable long gameId) {
+//        return playService.endGame(gameId);
+//    }
+
 }

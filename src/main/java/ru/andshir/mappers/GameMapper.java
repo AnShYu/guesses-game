@@ -10,6 +10,7 @@ import ru.andshir.model.Game;
 import ru.andshir.model.Question;
 import ru.andshir.model.Round;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,6 +22,8 @@ public class GameMapper {
     public Game addGameDtoToGame(AddGameDTO addGameDTO) {
         Game game = new Game();
         game.setGameDate(addGameDTO.getGameDate());
+        game.setRoundsWithQuestions(new ArrayList<>());
+        game.setNumberOfRounds(addGameDTO.getNumberOfRounds());
         return game;
     }
 
@@ -28,6 +31,7 @@ public class GameMapper {
         GameResponseDTO gameResponseDTO = new GameResponseDTO();
         gameResponseDTO.setId(game.getId());
         gameResponseDTO.setGameDate(game.getGameDate());
+        gameResponseDTO.setNumberOfRounds(game.getNumberOfRounds());
         for (Round round: game.getRoundsWithQuestions()) {
             RoundResponseDTO roundResponseDTO = roundMapper.roundToRoundResponseDTO(round);
             gameResponseDTO.getQuestionsInRounds().add(roundResponseDTO);

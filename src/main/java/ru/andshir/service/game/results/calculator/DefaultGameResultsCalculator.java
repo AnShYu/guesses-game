@@ -9,9 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class DefaultGameResultsCalculator implements GameResultsCalculator {
 
+
+    //Todo написать тест
     @Override
     public Map<Long, Integer> calculateGameResults(List<RoundResult> allGameRoundResults) {
         Map<Long, Integer> totalTeamPointsByTeamId = new HashMap<>();
@@ -19,7 +20,7 @@ public class DefaultGameResultsCalculator implements GameResultsCalculator {
             long teamId = roundResult.getRoundResultId().getTeamId();
             int pointsToAdd = roundResult.getPoints();
 
-            if(totalTeamPointsByTeamId.containsKey(teamId)) {
+            if (totalTeamPointsByTeamId.containsKey(teamId)) {
                 int currentPoints = totalTeamPointsByTeamId.get(teamId);
                 totalTeamPointsByTeamId.put(teamId, currentPoints + pointsToAdd);
             } else {

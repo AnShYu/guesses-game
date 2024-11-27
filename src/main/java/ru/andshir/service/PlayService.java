@@ -15,7 +15,6 @@ import ru.andshir.mappers.GameResultsMapper;
 import ru.andshir.mappers.RoundResultsMapper;
 import ru.andshir.model.*;
 import ru.andshir.repository.*;
-import ru.andshir.service.game.readiness.checker.GameReadinessChecker;
 import ru.andshir.service.game.results.calculator.GameResultsCalculator;
 import ru.andshir.service.round.results.determiners.HowManySameAnswersDeterminer;
 import ru.andshir.service.round.results.determiners.RoundResultsWrapper;
@@ -39,7 +38,7 @@ public class PlayService {
     private final RoundResultsMapper roundResultsMapper;
     private final RoundResultsRepository roundResultsRepository;
     //Todo правильно?
-    private final GameResultsCalculator resultsCalculator;
+    private final GameResultsCalculator gameResultsCalculator;
     private final GameResultsMapper gameResultsMapper;
 
     @Transactional
@@ -125,6 +124,7 @@ public class PlayService {
         if (checkIfRoundWasFinal(gameId, currentRoundNumber)) {
             throw new NoMoreRoundsException("Final round is over. No more rounds");
         }
+        //TOdo поменять на получение сущности, изменение и сохранение
         currentRoundsRepository.updateRoundNumber(gameId, currentRoundNumber + 1);
         currentRoundsRepository.updateResultsSaved(gameId, false);
     }
@@ -139,11 +139,19 @@ public class PlayService {
         }
         List<RoundResult> allGameRoundResults = roundResultsRepository.findAllByGameId(gameId);
 
-        Map<Long, Integer> totalTeamPointsByTeamId = resultsCalculator.calculateGameResults(allGameRoundResults);
+        Map<Long, Integer> totalTeamPointsByTeamId = gameResultsCalculator.calculateGameResults(allGameRoundResults);
         Map<Long, String> teamNameByTeamId = makeTeamNameByTeamIdMap(gameId);
         GameResultsResponseDTO gameResultsResponseDTO = gameResultsMapper.teamNameAndTeamIdAndPointsToGameResultsResponseDTO(totalTeamPointsByTeamId, teamNameByTeamId);
         return gameResultsResponseDTO;
+
+    }
+
+    @Transactional
+    public GameResultsResponseDTO endGame(long gameId) {
         //Todo сохранять результаты игры, обнулять currentRound
+
+        return new GameResultsResponseDTO();
+
     }
 
 

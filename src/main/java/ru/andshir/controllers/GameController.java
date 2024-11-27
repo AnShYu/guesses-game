@@ -1,6 +1,7 @@
 package ru.andshir.controllers;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.andshir.controllers.dto.request.AddQuestionToGameDTO;
@@ -17,7 +18,7 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping("/add_game")
-    public GameResponseDTO saveGame(@RequestBody AddGameDTO addGameDTO) {
+    public GameResponseDTO saveGame(@Valid @RequestBody AddGameDTO addGameDTO) {
        return gameService.saveGame(addGameDTO);
     }
 

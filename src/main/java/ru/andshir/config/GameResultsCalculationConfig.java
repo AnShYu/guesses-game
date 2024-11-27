@@ -10,11 +10,9 @@ import ru.andshir.service.game.results.calculator.GameResultsCalculator;
 @RequiredArgsConstructor
 public class GameResultsCalculationConfig {
 
-    private final DefaultGameResultsCalculator defaultGameResultsCalculator;
-
     @Bean
     public GameResultsCalculator resultsCalculator() {
-        GameResultsCalculator gameResultsCalculator = defaultGameResultsCalculator;
+        GameResultsCalculator gameResultsCalculator = new DefaultGameResultsCalculator();
         return gameResultsCalculator;
     }
 
