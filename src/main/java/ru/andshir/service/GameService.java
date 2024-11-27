@@ -13,9 +13,8 @@ import ru.andshir.mappers.RoundMapper;
 import ru.andshir.model.Game;
 import ru.andshir.model.Question;
 import ru.andshir.model.Round;
-import ru.andshir.repository.GamesRepository;
-import ru.andshir.repository.QuestionsRepository;
-import ru.andshir.repository.RoundsRepository;
+import ru.andshir.model.Team;
+import ru.andshir.repository.*;
 import ru.andshir.service.game.readiness.checker.GameReadinessChecker;
 
 import java.util.ArrayList;
@@ -31,6 +30,7 @@ public class GameService {
     private final RoundsRepository roundsRepository;
     private final QuestionsRepository questionsRepository;
     private final GameReadinessChecker gameReadinessChecker;
+    private final TeamsRepository teamsRepository;
 
     @Transactional
     public GameResponseDTO saveGame(AddGameDTO addGameDTO) {
@@ -60,7 +60,8 @@ public class GameService {
         for (Round round: roundsInGame) {
             questionsInGame.add(round.getQuestion());
         }
-        return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame);
+        List<Team> teamsInGame = teamsRepository.findTeamByGameId(gameId);
+        return gameMapper.gameToGameStatusResponseDTO(game, questionsInGame, teamsInGame);
     }
 
     @Transactional

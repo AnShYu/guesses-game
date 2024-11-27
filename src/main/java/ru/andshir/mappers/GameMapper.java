@@ -6,9 +6,11 @@ import ru.andshir.controllers.dto.request.AddGameDTO;
 import ru.andshir.controllers.dto.response.GameResponseDTO;
 import ru.andshir.controllers.dto.response.GameStatusResponseDTO;
 import ru.andshir.controllers.dto.response.RoundResponseDTO;
+import ru.andshir.controllers.dto.response.TeamResponseDTO;
 import ru.andshir.model.Game;
 import ru.andshir.model.Question;
 import ru.andshir.model.Round;
+import ru.andshir.model.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 public class GameMapper {
 
     private final RoundMapper roundMapper;
+    private final TeamMapper teamMapper;
 
     public Game addGameDtoToGame(AddGameDTO addGameDTO) {
         Game game = new Game();
@@ -39,7 +42,7 @@ public class GameMapper {
         return gameResponseDTO;
     }
 
-    public GameStatusResponseDTO gameToGameStatusResponseDTO(Game game, List<Question> questions) {
+    public GameStatusResponseDTO gameToGameStatusResponseDTO(Game game, List<Question> questions, List<Team> teamsInGame) {
         GameStatusResponseDTO gameStatusResponseDTO = new GameStatusResponseDTO();
         gameStatusResponseDTO.setId(game.getId());
         gameStatusResponseDTO.setGameDate(game.getGameDate());
@@ -47,6 +50,14 @@ public class GameMapper {
             gameStatusResponseDTO.getQuestions().add(question);
         }
         gameStatusResponseDTO.setNumberOfRounds(game.getNumberOfRounds());
+
+        List<TeamResponseDTO> teamResponseDTOs = new ArrayList<>();
+        for (Team team: teamsInGame) {
+            TeamResponseDTO teamResponseDTO = teamMapper.teamToTeamResponseDto(team);
+            teamResponseDTOs.add(teamResponseDTO);
+        }
+        gameStatusResponseDTO.setTeams(teamResponseDTOs);
+
         return gameStatusResponseDTO;
     }
 }

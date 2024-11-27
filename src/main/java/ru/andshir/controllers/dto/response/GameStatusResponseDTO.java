@@ -12,7 +12,8 @@ public class GameStatusResponseDTO {
 
     private long id;
     private LocalDateTime gameDate;
-    List<Question> questions = new ArrayList<>();
-    int numberOfRounds;
+    private List<Question> questions = new ArrayList<>();
+    private int numberOfRounds;
+    private List<TeamResponseDTO> teams = new ArrayList<>();
 
 }
